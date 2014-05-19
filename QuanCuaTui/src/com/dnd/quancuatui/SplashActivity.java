@@ -1,17 +1,21 @@
-package com.example.quancuatui;
+package com.dnd.quancuatui;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 
-public class MainActivity extends ActionBarActivity {
+import com.dnd.quancuatui.service.ServiceData;
+
+public class SplashActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +25,13 @@ public class MainActivity extends ActionBarActivity {
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
-			//dads
+
 		}
+		
+		/*
+		 *  test Add new user
+		 */
+		ServiceData.instance.addNewUser(getDeviceID(), getModel(), get_OStype(), getDeviceID());
 	}
 
 	@Override
@@ -62,4 +71,34 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
+	/*
+	 * get device ID
+	 */
+	public String getDeviceID() {
+		String identifier = null;
+		TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+		if (tm != null)
+		      identifier = tm.getDeviceId();
+		if (identifier == null || identifier .length() == 0)
+		      identifier = Secure.getString(getContentResolver(),Secure.ANDROID_ID);
+		
+		return identifier;
+	}
+	
+	/*
+	 * get model device
+	 */
+	public String getModel(){
+		return android.os.Build.MODEL;
+	}
+
+	/*
+	 * get os type
+	 */
+	public String get_OStype(){
+		return "Android " + Build.VERSION.SDK_INT;
+	}
+	
+	
 }
+
