@@ -16,6 +16,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 
+import android.nfc.cardemulation.HostApduService;
+
 import com.dnd.quancuatui.ultilities.Base64;
 
 
@@ -35,7 +37,8 @@ public abstract class Service {
 	public static String Question = "?";
 	public static String AND = "&&";
 	public static String Equals = "=";
-	public static String HOST = "http://game4apk.com/diadiem_ws/functions/";
+	public static String HOST = "http://game4apk.com/";
+	public static String HOST_SERVICE = HOST + "diadiem_ws/functions/";
 	public static String TOKEN = "qctDnD&!@#$%^";
 	
 

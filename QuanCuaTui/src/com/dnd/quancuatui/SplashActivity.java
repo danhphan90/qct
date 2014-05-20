@@ -31,7 +31,43 @@ public class SplashActivity extends ActionBarActivity {
 		/*
 		 *  test Add new user
 		 */
-		ServiceData.instance.addNewUser(getDeviceID(), getModel(), get_OStype(), getDeviceID());
+		//ServiceData.instance.addNewUser(getDeviceID(), getModel(), get_OStype(), getDeviceID());
+		
+		/*
+		 * test Get List Category
+		 */
+		//ServiceData.instance.getListCategory();
+		
+		/*
+		 * test Get List Province
+		 */
+		//ServiceData.instance.getListProvince();
+		
+		/*
+		 * test Get List District
+		 */
+		//ServiceData.instance.getListDistrict(1);//tp.hcm : 1
+		
+		/*
+		 * test Add New Idea
+		 */
+		//ServiceData.instance.addNewIdea("Góp ý chức năng tìm kiếm", "Cho tìm kiếm giọng nói (test)");
+	
+		/*
+		 * test Add Wrong Place
+		 */
+		//ServiceData.instance.addWrongPlace(getDeviceID(), "2"); // detailRestauntID = 2
+		
+		/*
+		 * test Add Near Me
+		 */
+		//ServiceData.instance.addNearMe(getDeviceID(), 10.44131, 11.32313, "14,51,13", 3);
+	
+		/*
+		 * test Get List Detail Restaurant
+		 */
+		ServiceData.instance.getListDetailRestaurantFromDistrictIdAndCategoryID(0, 5);
+	
 	}
 
 	@Override
