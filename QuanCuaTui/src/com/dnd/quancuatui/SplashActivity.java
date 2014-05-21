@@ -1,22 +1,23 @@
 package com.dnd.quancuatui;
 
-import android.content.Context;
-import android.os.Build;
+import com.dnd.quancuatui.service.ServiceData;
+import com.dnd.quancuatui.ultilities.Ultilities;
+
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dnd.quancuatui.service.ServiceData;
-
 public class SplashActivity extends ActionBarActivity {
 
+	SplashActivity instance = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,6 +28,8 @@ public class SplashActivity extends ActionBarActivity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 
 		}
+		
+		instance = this;
 		
 		/*
 		 *  test Add new user
@@ -65,9 +68,63 @@ public class SplashActivity extends ActionBarActivity {
 	
 		/*
 		 * test Get List Detail Restaurant
+		 * DistrictID = 0  , categoryID = 5
 		 */
-		ServiceData.instance.getListDetailRestaurantFromDistrictIdAndCategoryID(0, 5);
+		//ServiceData.instance.getListDetailRestaurantFromDistrictIdAndCategoryID(0, 5);
 	
+		/*
+		 * test Get List Restaurant with Page (begin page = 0)
+		 */
+		//ServiceData.instance.getListDetailRestaurantWithPage(0);
+		
+		///////////////////////////////////////
+		new loading().execute();
+		
+	}
+	
+	class loading extends AsyncTask<Void, Void, Void>{
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			//check the first install app
+			Ultilities.checkTheFirstInstallApp(instance);
+			
+			/*
+			 * test Get List Category
+			 */
+			ServiceData.instance.getListCategory();
+			
+			/*
+			 * test Get List Province
+			 */
+			ServiceData.instance.getListProvince();
+			
+			/*
+			 * test Get List District
+			 */
+			ServiceData.instance.getListDistrict(1);//tp.hcm : 1
+			
+			/*
+			 * test Get List Restaurant with Page (begin page = 0)
+			 */
+			ServiceData.instance.getListDetailRestaurantWithPage(0);
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			
+			Intent intent = new Intent(instance,MainActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	@Override
@@ -106,35 +163,6 @@ public class SplashActivity extends ActionBarActivity {
 			return rootView;
 		}
 	}
-
-	/*
-	 * get device ID
-	 */
-	public String getDeviceID() {
-		String identifier = null;
-		TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-		if (tm != null)
-		      identifier = tm.getDeviceId();
-		if (identifier == null || identifier .length() == 0)
-		      identifier = Secure.getString(getContentResolver(),Secure.ANDROID_ID);
-		
-		return identifier;
-	}
-	
-	/*
-	 * get model device
-	 */
-	public String getModel(){
-		return android.os.Build.MODEL;
-	}
-
-	/*
-	 * get os type
-	 */
-	public String get_OStype(){
-		return "Android " + Build.VERSION.SDK_INT;
-	}
-	
 	
 }
 

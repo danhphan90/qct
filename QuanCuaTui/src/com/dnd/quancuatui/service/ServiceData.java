@@ -24,14 +24,15 @@ public class ServiceData extends Service {
 	public final static String ADD_WRONG_PLACE = "AddWrongPlace.php";
 	public final static String ADD_NEAR_ME = "AddNearMe.php";
 	public final static String GET_LIST_RESTAURANT_WITH_DISTRICTID_AND_CATEGORYID = "GetListRestaurantWithDistrictidAndCategoryid.php";
-	
+	public final static String GET_LIST_RESTAURANT_WITH_PAGE = "GetListRestaurantWithPage.php";
 
 	// TODO Variables
 	public ArrayList<Category> list_category = new ArrayList<Category>();
 	public ArrayList<Provine> list_province = new ArrayList<Provine>();
 	public ArrayList<District> list_district = new ArrayList<District>();
-	public ArrayList<DetailRestaurant> list_detail_restaurant = new ArrayList<DetailRestaurant>();
-
+	public ArrayList<DetailRestaurant> list_restaurant = new ArrayList<DetailRestaurant>();
+	public ArrayList<DetailRestaurant> list_restaurant_with_page = new ArrayList<DetailRestaurant>();
+	
 	public ServiceData() {
 
 	}
@@ -214,7 +215,7 @@ public class ServiceData extends Service {
 
 			DATA = obj.getString("list_restaurant");
 
-			list_detail_restaurant = new ArrayList<DetailRestaurant>();
+			list_restaurant = new ArrayList<DetailRestaurant>();
 			JSONArray json = null;
 			try {
 				json = new JSONArray(DATA);
@@ -249,7 +250,66 @@ public class ServiceData extends Service {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				} finally {
-					list_detail_restaurant.add(item);
+					list_restaurant.add(item);
+				}
+			}
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+	}
+	
+	/*
+	 * get list detail restaurant with Page
+	 */
+	public void getListDetailRestaurantWithPage(int page) {
+		VALUE = TOKEN + AND + page;
+		LINK = HOST_SERVICE + GET_LIST_RESTAURANT_WITH_PAGE;
+		DATA = getDataJson(VALUE, LINK);
+
+		JSONObject obj;
+		try {
+			obj = new JSONObject(DATA);
+
+			DATA = obj.getString("list_restaurant");
+
+			list_restaurant = new ArrayList<DetailRestaurant>();
+			JSONArray json = null;
+			try {
+				json = new JSONArray(DATA);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			for (int i = 0; i < json.length(); i++) {
+				DetailRestaurant item = new DetailRestaurant();
+				try {
+					JSONObject j = json.getJSONObject(i);
+					item.setDetailID(Integer.parseInt(j.getString("detailID")));
+					item.setDistrictID(Integer.parseInt(j.getString("districtID")));
+					item.setCategoryID(Integer.parseInt(j.getString("categoryID")));
+					item.setTitle(j.getString("title"));
+					item.setAddress(j.getString("address"));
+					item.setTime(j.getString("time"));
+					item.setPrice(j.getString("price"));
+					item.setLongitude(Double.parseDouble(j.getString("longitude")));
+					item.setLatitude(Double.parseDouble(j.getString("latitude")));
+					item.setDetailInfo(j.getString("detailInfo"));
+					item.setAdvantage(j.getString("advantage"));
+					item.setDisadvantage(j.getString("disadvantage"));
+					item.setRate(Float.parseFloat(j.getString("rate")));
+					item.setNumberLike(Integer.parseInt(j.getString("numberLike")));
+					item.setNumberShare(Integer.parseInt(j.getString("numberShare")));
+					item.setAvatar_link(j.getString("avatar"));
+					
+					String images = j.getString("images");
+					String[] list_images = images.split("\n");
+					item.setList_image_links(list_images);
+		
+				} catch (JSONException e) {
+					e.printStackTrace();
+				} finally {
+					list_restaurant.add(item);
 				}
 			}
 		} catch (JSONException e1) {
